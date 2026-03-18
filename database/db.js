@@ -1,14 +1,14 @@
-import 'dotenv/config'
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const DATA_DIR = join(__dirname, '../data')
+const IS_VERCEL = process.env.VERCEL === '1'
+const DATA_DIR = IS_VERCEL ? '/tmp' : join(__dirname, '../data')
 const DB_PATH = join(DATA_DIR, 'uploads.json')
 
-// Garantir que a pasta data existe
-if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true })
+// Garantir que a pasta data existe (só localmente)
+if (!IS_VERCEL && !existsSync(DATA_DIR)) mkdirSync(DATA_DIR, { recursive: true })
 if (!existsSync(DB_PATH)) writeFileSync(DB_PATH, '[]')
 
 function lerDB() {
