@@ -1,0 +1,53 @@
+<div class="container page-history">
+  <div class="page-header">
+    <h1><i class="fa-solid fa-clock-rotate-left"></i> History / Histórico</h1>
+    <p>Recent uploads — stored locally in your browser session.</p>
+  </div>
+
+  <% if (uploads.length === 0) { %>
+  <div class="empty-state">
+    <i class="fa-solid fa-box-open"></i>
+    <p>No uploads yet. / Nenhum upload ainda.</p>
+    <a href="/" class="btn-primary">Upload a file</a>
+  </div>
+  <% } else { %>
+  <div class="history-grid">
+    <% uploads.forEach(upload => { %>
+    <% const expirado = new Date(upload.expiraEm) < new Date() %>
+    <div class="history-card <%= expirado ? 'expired' : '' %>">
+      <div class="hcard-icon">
+        <% if (upload.tipo.startsWith('image/')) { %>
+          <i class="fa-solid fa-image"></i>
+        <% } else if (upload.tipo.startsWith('video/')) { %>
+          <i class="fa-solid fa-video"></i>
+        <% } else if (upload.tipo.startsWith('audio/')) { %>
+          <i class="fa-solid fa-music"></i>
+        <% } else if (upload.tipo.includes('pdf')) { %>
+          <i class="fa-solid fa-file-pdf"></i>
+        <% } else if (upload.tipo.includes('zip') || upload.tipo.includes('rar')) { %>
+          <i class="fa-solid fa-file-zipper"></i>
+        <% } else { %>
+          <i class="fa-solid fa-file"></i>
+        <% } %>
+      </div>
+      <div class="hcard-info">
+        <p class="hcard-name"><%= upload.nome %></p>
+        <p class="hcard-meta">
+          <%= formatBytes(upload.tamanho) %> ·
+          <% if (expirado) { %>
+            <span class="expired-tag">Expired</span>
+          <% } else { %>
+            <span class="active-tag"><%= tempoRestante(upload.expiraEm) %> left</span>
+          <% } %>
+        </p>
+      </div>
+      <% if (!expirado) { %>
+      <a href="/f/<%= upload.id %>" class="hcard-link">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+      </a>
+      <% } %>
+    </div>
+    <% }) %>
+  </div>
+  <% } %>
+</div>

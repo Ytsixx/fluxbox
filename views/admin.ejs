@@ -1,0 +1,94 @@
+<div class="container admin-panel">
+  <div class="admin-header">
+    <h1><i class="fa-solid fa-screwdriver-wrench"></i> Admin — FluxBox</h1>
+    <span class="admin-badge"><i class="fa-solid fa-lock"></i> Restricted</span>
+  </div>
+
+  <!-- STATS -->
+  <div class="admin-stats">
+    <div class="stat-card">
+      <i class="fa-solid fa-files"></i>
+      <div>
+        <span class="stat-num"><%= stats.total %></span>
+        <span class="stat-label">Total Uploads</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <i class="fa-solid fa-circle-check" style="color:#4ade80"></i>
+      <div>
+        <span class="stat-num"><%= stats.ativos %></span>
+        <span class="stat-label">Active Files</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <i class="fa-solid fa-trash" style="color:#f87171"></i>
+      <div>
+        <span class="stat-num"><%= stats.expirados %></span>
+        <span class="stat-label">Expired</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <i class="fa-solid fa-hard-drive" style="color:#60a5fa"></i>
+      <div>
+        <span class="stat-num"><%= stats.totalMB %> MB</span>
+        <span class="stat-label">Storage Used</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="admin-actions">
+    <form action="/<%= process.env.ADMIN_SECRET || 'fluxbox-admin-2025' %>/limpar-expirados" method="POST">
+      <button type="submit" class="btn-admin-warn">
+        <i class="fa-solid fa-broom"></i> Clean Expired / Limpar Expirados (<%= stats.expirados %>)
+      </button>
+    </form>
+  </div>
+
+  <!-- UPLOADS TABLE -->
+  <div class="admin-section">
+    <h2><i class="fa-solid fa-list"></i> All Uploads</h2>
+    <% if (uploads.length === 0) { %>
+      <p class="admin-empty">No uploads yet.</p>
+    <% } else { %>
+    <div class="admin-table-wrapper">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>File / Ficheiro</th>
+            <th>Size</th>
+            <th>Expires</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% uploads.forEach(u => { %>
+          <% const expirado = new Date(u.expiraEm) < new Date() %>
+          <tr>
+            <td>
+              <a href="/f/<%= u.id %>" target="_blank" class="file-link-admin"><%= u.nome %></a>
+            </td>
+            <td><%= formatBytes(u.tamanho) %></td>
+            <td><%= tempoRestante(u.expiraEm) %></td>
+            <td>
+              <span class="status-badge <%= expirado ? 'inactive' : 'active' %>">
+                <%= expirado ? 'Expired' : 'Active' %>
+              </span>
+            </td>
+            <td>
+              <form action="/<%= process.env.ADMIN_SECRET || 'fluxbox-admin-2025' %>/deletar" method="POST" onsubmit="return confirm('Delete this file?')">
+                <input type="hidden" name="id" value="<%= u.id %>">
+                <button type="submit" class="btn-admin-sm btn-danger">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+  </div>
+</div>

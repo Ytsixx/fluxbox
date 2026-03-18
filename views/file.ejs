@@ -1,0 +1,113 @@
+<div class="container page-file">
+
+  <% if (expirado) { %>
+  <div class="expired-box">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <h2>File Expired</h2>
+    <p>This file has been automatically deleted.</p>
+    <a href="/" class="btn-primary"><i class="fa-solid fa-upload"></i> Upload New File</a>
+  </div>
+  <% } else { %>
+
+  <div class="file-card">
+
+    <!-- Header -->
+    <div class="file-header">
+      <div class="file-icon-big">
+        <% if (upload.tipo.startsWith('image/')) { %>
+          <i class="fa-solid fa-image"></i>
+        <% } else if (upload.tipo.startsWith('video/')) { %>
+          <i class="fa-solid fa-video"></i>
+        <% } else if (upload.tipo.startsWith('audio/')) { %>
+          <i class="fa-solid fa-music"></i>
+        <% } else if (upload.tipo.includes('pdf')) { %>
+          <i class="fa-solid fa-file-pdf"></i>
+        <% } else if (upload.tipo.includes('zip') || upload.tipo.includes('rar')) { %>
+          <i class="fa-solid fa-file-zipper"></i>
+        <% } else { %>
+          <i class="fa-solid fa-file"></i>
+        <% } %>
+      </div>
+      <div class="file-info">
+        <h1><%= upload.nome %></h1>
+        <div class="file-meta">
+          <span><i class="fa-solid fa-weight-hanging"></i> <%= formatBytes(upload.tamanho) %></span>
+          <span><i class="fa-solid fa-calendar"></i> <%= new Date(upload.criadoEm).toLocaleDateString('en-GB') %></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Countdown -->
+    <div class="file-countdown">
+      <span class="countdown-label"><i class="fa-regular fa-clock"></i> Expires in</span>
+      <span class="countdown-value" id="countdown" data-expires="<%= upload.expiraEm %>">--</span>
+    </div>
+
+    <!-- Preview -->
+    <% if (upload.tipo.startsWith('image/')) { %>
+    <div class="file-preview">
+      <img src="<%= upload.url %>" alt="<%= upload.nome %>" loading="lazy">
+    </div>
+    <% } else if (upload.tipo.startsWith('video/')) { %>
+    <div class="file-preview">
+      <video controls>
+        <source src="<%= upload.url %>" type="<%= upload.tipo %>">
+      </video>
+    </div>
+    <% } else if (upload.tipo.startsWith('audio/')) { %>
+    <div class="file-preview audio-preview">
+      <audio controls>
+        <source src="<%= upload.url %>" type="<%= upload.tipo %>">
+      </audio>
+    </div>
+    <% } %>
+
+    <!-- Link -->
+    <div class="file-link-row">
+      <input type="text" value="https://files.fluxdev.site/f/<%= upload.id %>" readonly id="file-link">
+      <button onclick="copyFileLink()" class="btn-copy-sm" id="copy-btn" title="Copy link">
+        <i class="fa-solid fa-copy"></i>
+      </button>
+    </div>
+
+    <!-- Actions -->
+    <div class="file-actions">
+      <a href="<%= upload.url %>" target="_blank" download class="btn-primary">
+        <i class="fa-solid fa-download"></i> Download
+      </a>
+      <a href="/" class="btn-outline">
+        <i class="fa-solid fa-upload"></i> Upload New
+      </a>
+    </div>
+
+  </div>
+  <% } %>
+</div>
+
+<script>
+// Countdown
+const el = document.getElementById('countdown')
+if (el) {
+  function update() {
+    const diff = new Date(el.dataset.expires) - new Date()
+    if (diff <= 0) { el.textContent = 'Expired'; return }
+    const h = Math.floor(diff / 3600000)
+    const m = Math.floor((diff % 3600000) / 60000)
+    const s = Math.floor((diff % 60000) / 1000)
+    if (h >= 24) el.textContent = `${Math.floor(h/24)}d ${h%24}h ${m}m`
+    else if (h > 0) el.textContent = `${h}h ${m}m ${s}s`
+    else el.textContent = `${m}m ${s}s`
+  }
+  update()
+  setInterval(update, 1000)
+}
+
+function copyFileLink() {
+  const input = document.getElementById('file-link')
+  const btn = document.getElementById('copy-btn')
+  navigator.clipboard.writeText(input.value).then(() => {
+    btn.innerHTML = '<i class="fa-solid fa-check"></i>'
+    setTimeout(() => btn.innerHTML = '<i class="fa-solid fa-copy"></i>', 2000)
+  })
+}
+</script>

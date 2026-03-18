@@ -1,0 +1,90 @@
+<div class="page">
+
+  <!-- LOGO -->
+  <div class="logo-area">
+    <div class="logo-box">
+      <i class="fa-solid fa-box-open logo-icon"></i>
+      <div class="logo-text">
+        <span class="logo-name">FluxBox</span>
+        <span class="logo-sub">by sixx.js</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DESCRIPTION -->
+  <p class="description">
+    Temporary uploads up to <strong>1 GB</strong> are allowed.
+    Files are automatically deleted after expiry.
+  </p>
+
+  <!-- UPLOAD FORM -->
+  <div class="upload-form">
+
+    <!-- Expiry -->
+    <div class="form-row">
+      <label>Expire after:</label>
+      <div class="expiry-group">
+        <button class="expiry-btn active" data-value="1d">1 day</button>
+        <button class="expiry-btn" data-value="2d">2 days</button>
+        <button class="expiry-btn" data-value="3d">3 days</button>
+      </div>
+    </div>
+
+    <!-- Drop Zone -->
+    <div class="drop-zone" id="drop-zone">
+      <input type="file" id="file-input" hidden multiple>
+      <p class="drop-text">Select or drag files here</p>
+    </div>
+
+    <!-- Preview -->
+    <div id="preview-wrap" class="preview-wrap" style="display:none"></div>
+
+    <!-- Upload Button -->
+    <button class="btn-upload" id="btn-upload" disabled>
+      <i class="fa-solid fa-upload" id="upload-icon"></i>
+      <i class="fa-solid fa-spinner fa-spin" id="upload-loader" style="display:none"></i>
+      <span id="upload-text">Upload</span>
+    </button>
+
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-wrap" id="upload-progress" style="display:none">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="progress-info">
+      <span id="progress-text">Uploading...</span>
+      <span id="progress-pct">0%</span>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="upload-result" style="display:none"></div>
+
+  <!-- HISTORY -->
+  <div class="history-section">
+    <p class="section-label">Recent uploads (this browser)</p>
+    <div id="history-list"></div>
+  </div>
+
+  <!-- LINKS -->
+  <div class="footer-links">
+    <a href="/history">History</a> |
+    <a href="/privacidade">Privacy</a> |
+    <a href="mailto:support@fluxdev.site">Contact</a>
+  </div>
+
+  <!-- DONATION -->
+  <div class="donation-box">
+    <p>Consider supporting FluxBox to keep it running!</p>
+    <div id="paypal-container-DTDJ5S67J7MXY"></div>
+    <div class="donation-bar-wrap">
+      <div class="donation-bar">
+        <div class="donation-fill" id="donation-fill" style="width:0%"></div>
+      </div>
+      <p class="donation-meta"><span class="donation-raised">$0</span> / $500</p>
+    </div>
+  </div>
+
+</div>
